@@ -4,15 +4,56 @@ class Boid {
   PVector acc;
   
   public Boid(PVector pos, PVector vel) {
-    acc = new PVector();
-    pos = pos;
-    vel = vel;
+    this.acc = new PVector();
+    this.pos = pos;
+    this.vel = vel;
   }
   
   void drawBoid(float x, float y, float heading) {
     pushMatrix();
     translate(x, y);
     rotate(heading);
-    
+    shape(boidShape);
+    popMatrix();
+  }
+  
+  void display() {
+    drawBoid(pos.x, pos.y, vel.heading());
+    if (pos.x < 50) {
+      drawBoid(pos.x + width, pos.y, vel.heading());
+    }
+    if (pos.x > width - 50) {
+      drawBoid(pos.x - width, pos.y, vel.heading());
+    }
+    if (pos.y < 50) {
+      drawBoid(pos.x, pos.y + height, vel.heading());
+    }
+    if (pos.y > height - 50) {
+      drawBoid(pos.x, pos.y - height, vel.heading());
+    }
+  }
+  
+  void separate() {
+    PVector target = new PVector();
+    int total = 0;
+    for (Boid other : boids) {
+      float d = dist(pos.x, pos.y, other.pos.x, other.pos.y);
+      if (other != this && d < radius) {
+        PVector diff = 
+      }
+    }
+  }
+  
+  void wrap() {
+    if (pos.x < 0) { pos.x = width; }
+    else if (pos.x >= width) { pos.x = 0; }
+    if (pos.y < 0) { pos.y = height; }
+    else if (pos.y >= height) { pos.y = 0; }
+  }
+  
+  void update() {
+    wrap();
+    pos.add(vel);
+    vel.add(acc);
   }
 }
