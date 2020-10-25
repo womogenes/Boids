@@ -12,16 +12,17 @@ Boid[] boids;
 PShape boidShape;
 
 void setup() {
-  size(1280, 720);
+  // size(1280, 720);
+  fullScreen();
   frameRate(60);
   
-  n = 200;
-  sCoef = 0.2;
-  aCoef = 0.5;
+  n = 500;
+  aCoef = 0.3;
+  sCoef = 0.5;
   cCoef = 0.5;
   radius = 100;
   
-  maxSpeed = 5;
+  maxSpeed = 3;
   maxForce = 0.1;
   
   boids = new Boid[n];

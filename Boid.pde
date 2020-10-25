@@ -39,9 +39,59 @@ class Boid {
     for (Boid other : boids) {
       float d = dist(pos.x, pos.y, other.pos.x, other.pos.y);
       if (other != this && d < radius) {
-        PVector diff = 
+        PVector diff = PVector.sub(pos, other.pos);
+        diff.div(d * d);
+        target.add(diff);
+        total++;
       }
     }
+    if (total == 0) return;
+    
+    target.div(total);
+    target.setMag(maxSpeed);
+    PVector force = PVector.sub(target, vel);
+    force.limit(maxForce);
+    force.mult(sCoef);
+    acc.add(force);
+  }
+  
+  void cohere() {
+    PVector center = new PVector();
+    int total = 0;
+    for (Boid other : boids) {
+      float d = dist(pos.x, pos.y, other.pos.x, other.pos.y);
+      if (other != this && d < radius) {
+        center.add(other.pos);
+        total++;
+      }
+    }
+    if (total == 0) return;
+    center.div(total);
+    PVector target = PVector.sub(center, pos);
+    target.setMag(maxSpeed);
+    PVector force = PVector.sub(target, vel);
+    force.limit(maxForce);
+    force.mult(cCoef);
+    acc.add(force);
+  }
+  
+  void align() {
+    PVector target = new PVector();
+    int total = 0;
+    for (Boid other : boids) {
+      float d = dist(pos.x, pos.y, other.pos.x, other.pos.y);
+      if (other != this && d < radius) {
+        target.add(other.vel);
+        total++;
+      }
+    }
+    if (total == 0) return;
+    target.div(total);
+    target.setMag(maxSpeed);
+    PVector force = PVector.sub(target, vel);
+    force.limit(maxForce);
+    force.mult(aCoef);
+    acc.add(force);
   }
   
   void wrap() {
@@ -52,8 +102,13 @@ class Boid {
   }
   
   void update() {
+    acc = new PVector();
     wrap();
+    align();
+    cohere();
+    separate();
     pos.add(vel);
     vel.add(acc);
+    vel.limit(maxSpeed);
   }
 }
