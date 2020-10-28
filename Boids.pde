@@ -16,7 +16,7 @@ void setup() {
   fullScreen();
   frameRate(60);
   
-  n = 500;
+  n = 200;
   aCoef = 0.3;
   sCoef = 0.5;
   cCoef = 0.5;
